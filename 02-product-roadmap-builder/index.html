@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A modern product roadmap builder for planning, tracking, and communicating product work.">
+  <title>Product Roadmap Builder</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="Roadmap Builder home">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" role="img"><path d="M5 18V8m7 10V4m7 14v-7"/></svg>
+        </span>
+        <span>Roadmap<span>Studio</span></span>
+      </a>
+      <div class="topbar-actions">
+        <button class="button button-quiet" id="resetDataButton" type="button">Reset demo</button>
+        <button class="button button-primary" id="addFeatureButton" type="button">
+          <span aria-hidden="true">＋</span> Add feature
+        </button>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="pageTitle">
+        <div>
+          <p class="eyebrow">Product planning workspace</p>
+          <h1 id="pageTitle">Turn product intent into a roadmap everyone can follow.</h1>
+          <p>Plan features, align owners, and keep releases moving—from one clear, flexible workspace.</p>
+        </div>
+        <div class="hero-note" aria-label="Roadmap planning tip">
+          <span class="hero-note-icon" aria-hidden="true">✦</span>
+          <div><strong>Keep plans outcome-focused</strong><span>Priorities explain why. Dates show when. Status makes progress visible.</span></div>
+        </div>
+      </section>
+
+      <section class="stats-grid" aria-label="Roadmap dashboard">
+        <article class="stat-card">
+          <span class="stat-icon purple" aria-hidden="true">▦</span>
+          <div><span class="stat-label">Total features</span><strong id="totalFeatures">0</strong><small id="totalFeaturesNote">Across your roadmap</small></div>
+        </article>
+        <article class="stat-card">
+          <span class="stat-icon green" aria-hidden="true">✓</span>
+          <div><span class="stat-label">Completed</span><strong id="completedFeatures">0</strong><small id="completedFeaturesNote">Features launched</small></div>
+        </article>
+        <article class="stat-card">
+          <span class="stat-icon amber" aria-hidden="true">◷</span>
+          <div><span class="stat-label">Upcoming releases</span><strong id="upcomingReleases">0</strong><small>Due in the next 60 days</small></div>
+        </article>
+        <article class="stat-card progress-card">
+          <div class="progress-ring" id="progressRing" aria-hidden="true"><span id="progressRingValue">0%</span></div>
+          <div><span class="stat-label">Overall progress</span><strong id="progressValue">0%</strong><small>Based on launched features</small></div>
+        </article>
+      </section>
+
+      <section class="roadmap-panel" aria-labelledby="roadmapHeading">
+        <div class="panel-topline">
+          <div>
+            <p class="section-kicker">Portfolio overview</p>
+            <h2 id="roadmapHeading">Product roadmap</h2>
+          </div>
+          <div class="view-switcher" role="group" aria-label="Roadmap view">
+            <button class="view-button active" type="button" data-view="kanban" aria-pressed="true">
+              <span aria-hidden="true">▦</span> Board
+            </button>
+            <button class="view-button" type="button" data-view="timeline" aria-pressed="false">
+              <span aria-hidden="true">↔</span> Timeline
+            </button>
+          </div>
+        </div>
+
+        <div class="toolbar">
+          <label class="search-field" for="searchInput">
+            <span aria-hidden="true">⌕</span>
+            <input id="searchInput" type="search" placeholder="Search features or descriptions…" autocomplete="off">
+          </label>
+
+          <div class="filter-row">
+            <label class="select-field">
+              <span class="sr-only">Filter by priority</span>
+              <select id="priorityFilter">
+                <option value="all">All priorities</option>
+                <option value="High">High priority</option>
+                <option value="Medium">Medium priority</option>
+                <option value="Low">Low priority</option>
+              </select>
+            </label>
+            <label class="select-field">
+              <span class="sr-only">Filter by status</span>
+              <select id="statusFilter">
+                <option value="all">All statuses</option>
+                <option value="Planned">Planned</option>
+                <option value="In Progress">In progress</option>
+                <option value="Launched">Launched</option>
+              </select>
+            </label>
+            <label class="select-field">
+              <span class="sr-only">Filter by owner</span>
+              <select id="ownerFilter"><option value="all">All owners</option></select>
+            </label>
+            <label class="select-field">
+              <span class="sr-only">Filter by release date</span>
+              <select id="releaseFilter">
+                <option value="all">Any release date</option>
+                <option value="overdue">Overdue</option>
+                <option value="next30">Next 30 days</option>
+                <option value="next90">Next 90 days</option>
+                <option value="later">Later than 90 days</option>
+              </select>
+            </label>
+            <label class="select-field sort-field">
+              <span class="select-prefix" aria-hidden="true">⇅</span>
+              <span class="sr-only">Sort features</span>
+              <select id="sortSelect">
+                <option value="release-asc">Release: soonest</option>
+                <option value="priority-desc">Priority: highest</option>
+                <option value="start-asc">Start: soonest</option>
+                <option value="name-asc">Name: A–Z</option>
+              </select>
+            </label>
+          </div>
+        </div>
+
+        <div class="results-bar">
+          <p id="resultsSummary" aria-live="polite">Showing all features</p>
+          <div class="timeline-controls hidden" id="timelineControls">
+            <span>Scale</span>
+            <div class="mini-switcher" role="group" aria-label="Timeline scale">
+              <button class="active" type="button" data-scale="month" aria-pressed="true">Months</button>
+              <button type="button" data-scale="quarter" aria-pressed="false">Quarters</button>
+            </div>
+          </div>
+          <button class="text-button hidden" id="clearFiltersButton" type="button">Clear filters</button>
+        </div>
+
+        <div id="kanbanView" class="kanban-view" aria-label="Kanban roadmap">
+          <section class="kanban-column" data-status="Planned">
+            <header><span class="status-dot planned"></span><h3>Planned</h3><span class="count" id="plannedCount">0</span></header>
+            <div class="kanban-list" id="plannedList" data-status="Planned"></div>
+          </section>
+          <section class="kanban-column" data-status="In Progress">
+            <header><span class="status-dot progress"></span><h3>In progress</h3><span class="count" id="inProgressCount">0</span></header>
+            <div class="kanban-list" id="inProgressList" data-status="In Progress"></div>
+          </section>
+          <section class="kanban-column" data-status="Launched">
+            <header><span class="status-dot launched"></span><h3>Launched</h3><span class="count" id="launchedCount">0</span></header>
+            <div class="kanban-list" id="launchedList" data-status="Launched"></div>
+          </section>
+        </div>
+
+        <div id="timelineView" class="timeline-view hidden" aria-label="Timeline roadmap">
+          <div class="timeline-scroll" id="timelineContent"></div>
+        </div>
+
+        <div class="empty-results hidden" id="emptyResults">
+          <span aria-hidden="true">⌕</span>
+          <h3>No features match these filters</h3>
+          <p>Try broadening your filters or add a new feature.</p>
+          <button class="button button-secondary" id="emptyClearButton" type="button">Clear filters</button>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>Roadmap Studio · Built for clear product decisions</p>
+      <p>Data is saved privately in this browser.</p>
+    </footer>
+  </div>
+
+  <dialog class="feature-dialog" id="featureDialog" aria-labelledby="dialogTitle">
+    <form id="featureForm" method="dialog">
+      <div class="dialog-header">
+        <div>
+          <p class="section-kicker" id="dialogKicker">New roadmap item</p>
+          <h2 id="dialogTitle">Add a feature</h2>
+        </div>
+        <button class="close-button" id="closeDialogButton" type="button" aria-label="Close dialog">×</button>
+      </div>
+
+      <input id="featureId" name="featureId" type="hidden">
+      <div class="form-field">
+        <label for="featureName">Feature name</label>
+        <input id="featureName" name="featureName" type="text" maxlength="80" placeholder="e.g. Collaborative planning" required autocomplete="off">
+      </div>
+      <div class="form-field">
+        <label for="featureDescription">Description</label>
+        <textarea id="featureDescription" name="featureDescription" maxlength="280" rows="3" placeholder="What outcome will this feature create?" required></textarea>
+        <small><span id="descriptionCount">0</span>/280</small>
+      </div>
+      <div class="form-grid">
+        <div class="form-field">
+          <label for="featureOwner">Owner</label>
+          <input id="featureOwner" name="featureOwner" type="text" maxlength="50" placeholder="e.g. Maya Chen" required autocomplete="off">
+        </div>
+        <div class="form-field">
+          <label for="featurePriority">Priority</label>
+          <select id="featurePriority" name="featurePriority" required>
+            <option value="High">High</option>
+            <option value="Medium" selected>Medium</option>
+            <option value="Low">Low</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label for="featureStatus">Status</label>
+          <select id="featureStatus" name="featureStatus" required>
+            <option value="Planned">Planned</option>
+            <option value="In Progress">In progress</option>
+            <option value="Launched">Launched</option>
+          </select>
+        </div>
+        <div class="form-field date-field">
+          <label for="featureStartDate">Start date</label>
+          <input id="featureStartDate" name="featureStartDate" type="date" required>
+        </div>
+        <div class="form-field date-field form-grid-span">
+          <label for="featureReleaseDate">Target release date</label>
+          <input id="featureReleaseDate" name="featureReleaseDate" type="date" required>
+          <small class="date-error hidden" id="dateError">Release date must be on or after the start date.</small>
+        </div>
+      </div>
+
+      <div class="dialog-actions">
+        <button class="button button-danger hidden" id="deleteFeatureButton" type="button">Delete</button>
+        <div class="dialog-actions-right">
+          <button class="button button-quiet" id="cancelButton" type="button">Cancel</button>
+          <button class="button button-primary" id="saveFeatureButton" type="submit">Add feature</button>
+        </div>
+      </div>
+    </form>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="script.js"></script>
+</body>
+</html>
