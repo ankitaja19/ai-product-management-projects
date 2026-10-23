@@ -19,17 +19,6 @@ Through this repository, I want to:
 - Understand the technology behind the products I build.
 - Share working demos, experiments, and learnings.
 
-## Projects
-
-| Project | What it does | Live Demo |
-|---|---|---|
-| 01 — RICE Prioritization Calculator | Score and compare features based on reach, impact, confidence, and effort | Coming soon |
-| 02 — Product Roadmap Builder | Create and visualize product roadmaps | Coming soon |
-| 03 — Customer Feedback Analyzer | Organize customer feedback and identify recurring themes | Coming soon |
-| 04 — AI PRD Generator | Turn product ideas into structured requirements | Coming soon |
-| 05 — Product Metrics Dashboard | Explore adoption, engagement, and conversion metrics | Coming soon |
-| 06 — AI HR Case Management | Experiment with AI-powered enterprise workflows | Coming soon |
-
 *Projects and demos will be added as they're built.*
 
 ## Tools I'm exploring
