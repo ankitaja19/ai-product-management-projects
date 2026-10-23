@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A simple RICE prioritization calculator for product managers.">
+  <title>RICE Prioritization Calculator</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="page-shell">
+    <header class="site-header">
+      <a class="brand" href="#" aria-label="RICE calculator home">
+        <span class="brand-mark" aria-hidden="true">R</span>
+        <span>RICE<span class="brand-light">board</span></span>
+      </a>
+      <div class="header-actions">
+        <button class="button button-ghost" id="loadExamplesButton" type="button">Load examples</button>
+        <button class="button button-danger-ghost" id="clearButton" type="button">Clear all</button>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="page-title">
+        <div>
+          <p class="eyebrow">Product prioritization, simplified</p>
+          <h1 id="page-title">Make the next decision <span>with confidence.</span></h1>
+          <p class="hero-copy">Compare initiatives using Reach, Impact, Confidence, and Effort. Your roadmap ranks itself as you add or update features.</p>
+        </div>
+        <div class="formula-card" aria-label="RICE score formula">
+          <span class="formula-label">RICE score</span>
+          <div class="formula">
+            <span>Reach × Impact × Confidence</span>
+            <span class="fraction-line"></span>
+            <span>Effort</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="stats-grid" aria-label="Prioritization summary">
+        <article class="stat-card">
+          <div class="stat-icon stat-icon-purple" aria-hidden="true">◆</div>
+          <div><span class="stat-label">Total features</span><strong id="totalFeatures">0</strong></div>
+        </article>
+        <article class="stat-card">
+          <div class="stat-icon stat-icon-green" aria-hidden="true">↗</div>
+          <div><span class="stat-label">Top score</span><strong id="topScore">—</strong></div>
+        </article>
+        <article class="stat-card">
+          <div class="stat-icon stat-icon-amber" aria-hidden="true">◫</div>
+          <div><span class="stat-label">Total effort</span><strong id="totalEffort">0 <small>person-mo.</small></strong></div>
+        </article>
+      </section>
+
+      <section class="workspace">
+        <aside class="panel form-panel">
+          <div class="panel-heading">
+            <div>
+              <p class="section-kicker" id="formKicker">New feature</p>
+              <h2 id="formTitle">Add an initiative</h2>
+            </div>
+            <button class="icon-button hidden" id="cancelEditButton" type="button" aria-label="Cancel editing" title="Cancel editing">×</button>
+          </div>
+
+          <form id="featureForm">
+            <div class="field full-width">
+              <label for="featureName">Feature name</label>
+              <input id="featureName" name="featureName" type="text" placeholder="e.g. Smart onboarding" maxlength="80" required autocomplete="off">
+            </div>
+
+            <div class="field-grid">
+              <div class="field">
+                <div class="label-row">
+                  <label for="reach">Reach</label>
+                  <button class="info-button" type="button" data-tooltip="People or events affected within a defined time period." aria-label="Reach help">?</button>
+                </div>
+                <input id="reach" name="reach" type="number" min="0" step="1" placeholder="1,000" required>
+                <small>People per period</small>
+              </div>
+
+              <div class="field">
+                <div class="label-row">
+                  <label for="impact">Impact</label>
+                  <button class="info-button" type="button" data-tooltip="Estimated impact per person: minimal (0.25) to massive (3)." aria-label="Impact help">?</button>
+                </div>
+                <select id="impact" name="impact" required>
+                  <option value="3">3 × Massive</option>
+                  <option value="2">2 × High</option>
+                  <option value="1" selected>1 × Medium</option>
+                  <option value="0.5">0.5 × Low</option>
+                  <option value="0.25">0.25 × Minimal</option>
+                </select>
+                <small>Outcome per person</small>
+              </div>
+
+              <div class="field">
+                <div class="label-row">
+                  <label for="confidence">Confidence</label>
+                  <button class="info-button" type="button" data-tooltip="How certain you are about your Reach, Impact, and Effort estimates." aria-label="Confidence help">?</button>
+                </div>
+                <div class="input-suffix">
+                  <input id="confidence" name="confidence" type="number" min="1" max="100" step="1" value="80" required>
+                  <span>%</span>
+                </div>
+                <small>Evidence strength</small>
+              </div>
+
+              <div class="field">
+                <div class="label-row">
+                  <label for="effort">Effort</label>
+                  <button class="info-button" type="button" data-tooltip="Total person-months needed across design, engineering, and other contributors." aria-label="Effort help">?</button>
+                </div>
+                <input id="effort" name="effort" type="number" min="0.1" step="0.1" placeholder="2" required>
+                <small>Person-months</small>
+              </div>
+            </div>
+
+            <div class="score-preview" aria-live="polite">
+              <span>Estimated RICE score</span>
+              <strong id="scorePreview">—</strong>
+            </div>
+
+            <button class="button button-primary full-width" id="submitButton" type="submit">
+              <span aria-hidden="true">＋</span> Add to priority list
+            </button>
+          </form>
+        </aside>
+
+        <section class="panel ranking-panel" aria-labelledby="ranking-title">
+          <div class="panel-heading ranking-heading">
+            <div>
+              <p class="section-kicker">Auto-ranked</p>
+              <h2 id="ranking-title">Priority list</h2>
+            </div>
+            <label class="search-box" for="searchInput">
+              <span aria-hidden="true">⌕</span>
+              <input id="searchInput" type="search" placeholder="Search features…" autocomplete="off">
+            </label>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">Rank</th>
+                  <th scope="col">Feature</th>
+                  <th scope="col">Reach</th>
+                  <th scope="col">Impact</th>
+                  <th scope="col">Confidence</th>
+                  <th scope="col">Effort</th>
+                  <th scope="col">RICE score</th>
+                  <th scope="col"><span class="sr-only">Actions</span></th>
+                </tr>
+              </thead>
+              <tbody id="featureTableBody"></tbody>
+            </table>
+            <div class="empty-state" id="emptyState">
+              <div class="empty-illustration" aria-hidden="true"><span>1</span><span>2</span><span>3</span></div>
+              <h3>Your priorities will appear here</h3>
+              <p>Add your first feature or load examples to see RICE ranking in action.</p>
+              <button class="button button-secondary" id="emptyExampleButton" type="button">Load example features</button>
+            </div>
+          </div>
+
+          <footer class="table-footer">
+            <p>Scores are sorted highest to lowest.</p>
+            <button class="text-button" id="exportButton" type="button" disabled>Export CSV <span aria-hidden="true">↓</span></button>
+          </footer>
+        </section>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>Built for better product decisions.</p>
+      <p>Your data stays in this browser.</p>
+    </footer>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="script.js"></script>
+</body>
+</html>
