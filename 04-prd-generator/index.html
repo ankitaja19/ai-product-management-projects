@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Turn a product idea into an editable, structured PRD using a transparent browser-based template engine.">
+  <title>PRD Studio — AI-Ready PRD Generator</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="PRD Studio home">
+        <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 3h7l4 4v14H7zM14 3v5h5M10 12h5M10 16h5"/></svg></span>
+        <span>PRD<span>Studio</span></span>
+      </a>
+      <div class="topbar-actions">
+        <span class="mode-badge"><span></span> Template mode · No AI</span>
+        <button class="button button-quiet" id="draftsButton" type="button"><span aria-hidden="true">▤</span> My drafts <b id="draftCount">0</b></button>
+        <button class="button button-primary" id="newPrdButton" type="button"><span aria-hidden="true">＋</span> New PRD</button>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="pageTitle">
+        <div>
+          <p class="eyebrow">From idea to first draft</p>
+          <h1 id="pageTitle">Build a thoughtful PRD, one clear decision at a time.</h1>
+          <p>Capture what you know, then use a transparent template engine to structure requirements, stories, metrics, risks, and questions for validation.</p>
+        </div>
+        <aside class="trust-card">
+          <span class="trust-icon" aria-hidden="true">✓</span>
+          <div><strong>Private by design</strong><span>Everything runs in your browser. No content is sent to an AI model, server, or external service.</span></div>
+        </aside>
+      </section>
+
+      <section class="notice" aria-label="Template generation notice">
+        <span class="notice-icon" aria-hidden="true">i</span>
+        <div><strong>This is template-generated, not AI-generated.</strong><span>Suggested content is derived deterministically from your inputs. Treat it as a structured starting point—not validated product evidence.</span></div>
+      </section>
+
+      <section class="workspace">
+        <aside class="input-panel panel" aria-labelledby="inputTitle">
+          <div class="panel-heading">
+            <div><p class="section-kicker">Step 1</p><h2 id="inputTitle">Describe the product idea</h2></div>
+            <button class="text-button" id="sampleButton" type="button">Load sample</button>
+          </div>
+
+          <form id="ideaForm" novalidate>
+            <div class="form-field">
+              <label for="productName">Product or feature name <span>*</span></label>
+              <input id="productName" type="text" maxlength="80" placeholder="e.g. FocusFlow" required autocomplete="off">
+              <small class="field-error"></small>
+            </div>
+            <div class="form-field">
+              <label for="productIdea">Product idea <span>*</span></label>
+              <textarea id="productIdea" rows="3" maxlength="500" placeholder="What are you considering building?" required></textarea>
+              <small class="field-error"></small>
+            </div>
+            <div class="form-field">
+              <label for="problemStatement">Problem statement <span>*</span></label>
+              <textarea id="problemStatement" rows="3" maxlength="700" placeholder="Who has what problem, and why does it matter?" required></textarea>
+              <small class="field-error"></small>
+            </div>
+            <div class="form-field">
+              <label for="targetUsers">Target users or personas <span>*</span></label>
+              <textarea id="targetUsers" rows="2" maxlength="350" placeholder="Separate personas with commas or new lines" required></textarea>
+              <small>Example: Independent consultants, Small agency owners</small><small class="field-error"></small>
+            </div>
+            <div class="form-field">
+              <label for="businessGoals">Business goals <span>*</span></label>
+              <textarea id="businessGoals" rows="2" maxlength="500" placeholder="What measurable outcomes should improve?" required></textarea>
+              <small class="field-error"></small>
+            </div>
+            <div class="form-field">
+              <label for="painPoints">Key pain points <span>*</span></label>
+              <textarea id="painPoints" rows="3" maxlength="600" placeholder="Separate pain points with commas or new lines" required></textarea>
+              <small class="field-error"></small>
+            </div>
+            <div class="form-field">
+              <label for="proposedSolution">Proposed solution <em>Optional</em></label>
+              <textarea id="proposedSolution" rows="2" maxlength="500" placeholder="Add your current solution hypothesis, if you have one"></textarea>
+            </div>
+            <div class="form-field">
+              <label for="constraints">Constraints and assumptions <span>*</span></label>
+              <textarea id="constraints" rows="3" maxlength="600" placeholder="Time, budget, policy, technology, evidence gaps…" required></textarea>
+              <small class="field-error"></small>
+            </div>
+            <button class="button button-primary generate-button" id="generateButton" type="submit"><span aria-hidden="true">✦</span><span class="button-label">Generate template PRD</span></button>
+            <p class="form-footnote">Generation is deterministic and happens only in this browser.</p>
+          </form>
+        </aside>
+
+        <section class="document-panel panel" aria-labelledby="documentTitle">
+          <div class="document-toolbar">
+            <div><p class="section-kicker">Step 2</p><h2 id="documentTitle">Review and refine</h2><span class="save-status" id="saveStatus" aria-live="polite">No draft open</span></div>
+            <div class="document-actions">
+              <button class="button button-quiet" id="saveButton" type="button" disabled><span aria-hidden="true">⌁</span> Save draft</button>
+              <button class="button button-quiet" id="markdownButton" type="button" disabled><span aria-hidden="true">↓</span> Markdown</button>
+              <button class="button button-quiet" id="printButton" type="button" disabled><span aria-hidden="true">▧</span> Print / PDF</button>
+            </div>
+          </div>
+
+          <div class="document-scroll" id="documentScroll">
+            <div class="empty-state" id="emptyState">
+              <div class="empty-visual" aria-hidden="true"><span></span><span></span><span></span><i>✦</i></div>
+              <h3>Your PRD will take shape here</h3>
+              <p>Complete the product brief, or load the fictional sample to explore an editable PRD.</p>
+              <button class="button button-secondary" id="emptySampleButton" type="button">Explore sample PRD</button>
+            </div>
+            <div class="loading-state hidden" id="loadingState" role="status" aria-live="polite">
+              <div class="loading-heading"><span class="spinner"></span><div><strong>Structuring your PRD</strong><small>Applying the deterministic template…</small></div></div>
+              <div class="skeleton wide"></div><div class="skeleton"></div><div class="skeleton short"></div>
+              <div class="skeleton-card"></div><div class="skeleton-card"></div>
+            </div>
+            <div class="error-state hidden" id="errorState" role="alert">
+              <span aria-hidden="true">!</span><h3>We couldn’t build the PRD</h3><p id="errorMessage">Check the form and try again.</p>
+              <button class="button button-secondary" id="retryButton" type="button">Try again</button>
+            </div>
+            <article class="prd-document hidden" id="prdDocument">
+              <header class="prd-cover">
+                <div><span class="document-type">Product requirements document</span><h2 id="prdTitle"></h2><p id="prdMeta"></p></div>
+                <span class="template-stamp">Template-generated</span>
+              </header>
+              <div class="source-legend">
+                <span><i class="source-dot user"></i> Your input</span><span><i class="source-dot mixed"></i> Input + suggestions</span><span><i class="source-dot template"></i> Template suggestion</span>
+              </div>
+              <div id="sectionsContainer"></div>
+            </article>
+          </div>
+        </section>
+      </section>
+    </main>
+    <footer class="site-footer"><p>PRD Studio · AI-ready, with no external AI connected</p><p>Drafts stay in this browser.</p></footer>
+  </div>
+
+  <dialog class="drafts-dialog" id="draftsDialog" aria-labelledby="draftsTitle">
+    <div class="dialog-header"><div><p class="section-kicker">Local workspace</p><h2 id="draftsTitle">Saved PRDs</h2></div><button class="close-button" id="closeDraftsButton" type="button" aria-label="Close saved drafts">×</button></div>
+    <p class="dialog-copy">Drafts are stored only in this browser. Export important work before clearing browser data.</p>
+    <div class="draft-list" id="draftList"></div>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="generator.js"></script>
+  <script src="storage.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
